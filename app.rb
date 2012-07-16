@@ -101,6 +101,15 @@ get '/venues/?:page?' do
 end
 
 get '/venue/:_id' do
+    object_id = 
+        BSON::ObjectId.from_string(params[:_id])
+    @venue = VENUES.find_one({ :_id => object_id })
+    @nearby_venues = VENUES.find(
+      { :'location.geo' =>
+        { :$near => [ @venue['location']['geo'][0],
+          @venue['location']['geo']}
+      }
+    haml :venue
     # Code to show a single venue goes here
     #
 end
