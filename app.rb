@@ -91,9 +91,13 @@ get '/user/:email/profile' do
   haml :user_profile
 end
 
-get '/venues' do
-    # Code to list all venues goes here
-    #
+get '/venues/?:page?' do
+  @page = params.fetch('page', 1).to_i
+  pp = 10
+  @venues = VENUES.find.skip(
+    ( @page - 1 ) * pp ).limit(pp)
+  @total_pages = (VENUES.count.to_i / pp).ceil
+  haml :venues
 end
 
 get '/venue/:_id' do
